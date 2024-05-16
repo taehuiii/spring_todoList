@@ -8,7 +8,7 @@ data class DutyResponseDto (
     val description : String,
     val date : LocalDate,
     val name : String,
-    val complete : Boolean
+    //val complete : Boolean
 
     //Todo :  comment
     //Todo :  user
