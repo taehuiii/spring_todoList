@@ -31,7 +31,8 @@
 ***
 
 #### [ Entity Relationship Diagram ]
-<img width="500" alt="erd" src="https://github.com/taehuiii/spring_todoList/assets/160212663/9c67a69b-0a0b-497a-93de-8b23342c6c7d">
+<img width="500" alt="erd" src="https://github.com/taehuiii/spring_todoList/assets/160212663/76ca63a9-6e65-403b-9c4c-7a66177db4d8">
+
 
 ***
 
