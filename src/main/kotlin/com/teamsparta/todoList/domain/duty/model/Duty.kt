@@ -24,10 +24,20 @@ class Duty (
         var complete :Boolean = false
 
 
+
         ){
         @Id
         @GeneratedValue(strategy= GenerationType.IDENTITY)
         var id : Long? =null
+
+//        fun addComment(comment: Comment) {
+//                comments.add(comment)
+//        }
+//
+//        fun removeComment(comment: Comment) {
+//                comments.remove(comment)
+//        }
+
 }
 
 fun Duty.toResponse(): DutyResponseDto {
