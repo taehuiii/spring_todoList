@@ -1,6 +1,7 @@
 package com.teamsparta.todoList.domain.duty.controller
 
 import com.teamsparta.todoList.domain.duty.dto.AddDutyRequestDto
+import com.teamsparta.todoList.domain.duty.dto.CompleteDutyRequestDto
 import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
 import com.teamsparta.todoList.domain.duty.dto.UpdateDutyRequestDto
 import com.teamsparta.todoList.domain.duty.service.DutyService
@@ -51,6 +52,13 @@ class DutyController(  //Todo : 생성자 주입
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .body(dutyService.deleteDuty(dutyId))
+    }
+
+    @PatchMapping("/{dutyId}")
+    fun completeDuty(@PathVariable dutyId:Long, @RequestBody completeDutyRequest : CompleteDutyRequestDto): ResponseEntity<DutyResponseDto>{
+        return ResponseEntity
+            . status(HttpStatus.OK)
+            . body(dutyService.completeDuty(dutyId,completeDutyRequest))
     }
 
     /**Controller : service layer에서 발생한 예외에 대하여 status code와 함께 응답 던져줌.

@@ -1,6 +1,7 @@
 package com.teamsparta.todoList.domain.duty.service
 
 import com.teamsparta.todoList.domain.duty.dto.AddDutyRequestDto
+import com.teamsparta.todoList.domain.duty.dto.CompleteDutyRequestDto
 import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
 import com.teamsparta.todoList.domain.duty.dto.UpdateDutyRequestDto
 import com.teamsparta.todoList.domain.duty.model.Duty
@@ -73,6 +74,12 @@ class DutyServiceImpl(
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
         dutyRepository.delete(duty)
 
+    }
+
+    override fun completeDuty(dutyId: Long, requestDto: CompleteDutyRequestDto) :DutyResponseDto {
+        val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
+        duty.complete = !duty.complete
+        return dutyRepository.save(duty).toResponse()
     }
 }
 

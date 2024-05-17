@@ -1,6 +1,7 @@
 package com.teamsparta.todoList.domain.duty.service
 
 import com.teamsparta.todoList.domain.duty.dto.AddDutyRequestDto
+import com.teamsparta.todoList.domain.duty.dto.CompleteDutyRequestDto
 import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
 import com.teamsparta.todoList.domain.duty.dto.UpdateDutyRequestDto
 
@@ -13,5 +14,7 @@ interface DutyService {
     fun addDuty( requestDto : AddDutyRequestDto) :DutyResponseDto
     fun updateDuty( dutyId: Long, requestDto: UpdateDutyRequestDto) : DutyResponseDto
     fun deleteDuty( dutyId: Long )
+
+    fun completeDuty(dutyId: Long , requestDto: CompleteDutyRequestDto): DutyResponseDto
 
 }

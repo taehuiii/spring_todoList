@@ -8,19 +8,21 @@ import java.time.LocalDate
 @Table(name ="duty")
 class Duty (
 
-        @Column(name="title")
+        @Column(name="title",nullable=false)
         var title : String,
 
-        @Column(name="description")
+        @Column(name="description",nullable=false)
         var description : String,
 
-        @Column(name="date")
+        @Column(name="date",nullable=false)
         val date : LocalDate,
 
-        @Column(name="name")
+        @Column(name="name",nullable=false)
         var name : String,
 
-        //완료여부 ( enum)
+        @Column(name="complete",nullable=false)
+        var complete :Boolean = false
+
 
         ){
         @Id
@@ -34,7 +36,7 @@ fun Duty.toResponse(): DutyResponseDto {
                 title = title,
                 description = description,
                 date =date,
-                name = name
-                //complete = complete,
+                name = name,
+                complete = complete
         )
 }
