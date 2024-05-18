@@ -29,7 +29,6 @@ class DutyController(
         return ResponseEntity
             .status(HttpStatus.OK)
             .body( dutyService.getDutyById(dutyId))
-        //todo: 댓글도 같이 ?
     }
 
 
