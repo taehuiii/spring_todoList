@@ -20,7 +20,7 @@ class Comment(
 
   @ManyToOne
   @JoinColumn(name="duty_id", nullable=false)
-  var duty : Duty
+  var duty: Duty
 
 ){
 

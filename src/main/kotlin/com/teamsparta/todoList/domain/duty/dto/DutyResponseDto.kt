@@ -1,5 +1,6 @@
 package com.teamsparta.todoList.domain.duty.dto
 
+import com.teamsparta.todoList.domain.comment.dto.CommentResponseDto
 import com.teamsparta.todoList.domain.comment.model.Comment
 import java.time.LocalDate
 
@@ -11,9 +12,10 @@ data class DutyResponseDto (
     val date : LocalDate,
     val name : String,
     val complete : Boolean,
-    //val comments : List<Comment>
+    val comments : MutableList<Comment>?
 
-    //Todo :  user
+
+    //Todo :user
 
 
         )

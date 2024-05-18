@@ -1,5 +1,7 @@
 package com.teamsparta.todoList.domain.duty.model
 
+import com.teamsparta.todoList.domain.comment.dto.CommentResponseDto
+import com.teamsparta.todoList.domain.comment.model.Comment
 import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
 import jakarta.persistence.*
 import java.time.LocalDate
@@ -21,9 +23,11 @@ class Duty (
         var name : String,
 
         @Column(name="complete",nullable=false)
-        var complete :Boolean = false
+        var complete :Boolean = false,
 
-
+        @OneToMany(mappedBy = "duty", fetch=FetchType.EAGER, cascade = [CascadeType.ALL])
+        @Column(name="comments",nullable=true)
+        var comments :MutableList<Comment>? = mutableListOf(), //Todo: comment? commentDto?
 
         ){
         @Id
@@ -47,6 +51,7 @@ fun Duty.toResponse(): DutyResponseDto {
                 description = description,
                 date =date,
                 name = name,
-                complete = complete
+                complete = complete,
+                comments = comments
         )
 }
