@@ -1,5 +1,7 @@
 package com.teamsparta.todoList.domain.duty.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.teamsparta.todoList.domain.comment.dto.CommentResponseDto
 import com.teamsparta.todoList.domain.comment.model.Comment
 import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
@@ -27,7 +29,8 @@ class Duty (
 
         @OneToMany(mappedBy = "duty", fetch=FetchType.EAGER, cascade = [CascadeType.ALL])
         @Column(name="comments",nullable=true)
-        var comments :MutableList<Comment>? = mutableListOf(), //Todo: comment? commentDto?
+        @JsonManagedReference
+        var comments :MutableList<Comment>? = mutableListOf(), //Todo: comment? commentDto? => dto에는 ?
 
         ){
         @Id
