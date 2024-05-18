@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/duties") //Handler Mapping에게 어떤 url을 담당하는지 알려줌 ( base url)
 @RestController //Spring Bean으로 등록하도록 (REST : view가 아닌 data만을 응답하기 때문 )
-class DutyController(  //Todo : 생성자 주입
+class DutyController(
     private val dutyService : DutyService //인터페이스 주입
 ) {
 
@@ -29,6 +29,7 @@ class DutyController(  //Todo : 생성자 주입
         return ResponseEntity
             .status(HttpStatus.OK)
             .body( dutyService.getDutyById(dutyId))
+        //todo: 댓글도 같이 ?
     }
 
 

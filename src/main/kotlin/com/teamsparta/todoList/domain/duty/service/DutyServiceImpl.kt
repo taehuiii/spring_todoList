@@ -47,6 +47,8 @@ class DutyServiceImpl(
         //만약 dutyId에 해당하는 duty 없다면 throw ModelNotFoundException
         //DB에서 id에 해당하는 duty Entity가져와서 dutyResponse(DTO)로 변환 후 반환
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
+        duty.comments  = commentRepository.findAllByDutyId(dutyId)
+
         return duty.toResponse()
     }
 
@@ -59,6 +61,7 @@ class DutyServiceImpl(
                 description = requestDto.description,
                 date = requestDto.date,
                 name = requestDto.name,
+                comments = null
             )
         ).toResponse()
     }
@@ -176,6 +179,13 @@ class DutyServiceImpl(
         }
 
     }
+
+//    override fun getCommentList(dutyId: Long): MutableList<CommentResponseDto> {
+//
+//      return commentRepository.findAllByDutyId(dutyId).map { it.toResponse() } as MutableList<CommentResponseDto> //Todo : 리턴타입??
+//    }
+//
+
 }
 
 

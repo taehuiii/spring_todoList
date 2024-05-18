@@ -45,5 +45,11 @@ class CommentController(
 
     }
 
+//    @GetMapping()
+//    fun getCommentList(@PathVariable dutyId :Long): ResponseEntity<List<CommentResponseDto>>{
+//        return ResponseEntity
+//            .status(HttpStatus.OK)
+//            .body( dutyService.getCommentList(dutyId))
+//    }
 
 }
