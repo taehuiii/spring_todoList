@@ -13,6 +13,16 @@ class GlobalExceptionHandler {
         fun handleModelNotFoundException(e: ModelNotFoundException): ResponseEntity<ErrorResponse> {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(e.message))
     }
+
+    @ExceptionHandler( NameNotFoundException ::class)
+    fun handleNameNotFoundException(e: NameNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(e.message))
+    }
+
+    @ExceptionHandler( PwNotFoundException ::class)
+    fun handlePwNotFoundException(e: PwNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(e.message))
+    }
 }
 
 /**Controller : service layer에서 발생한 예외에 대하여 status code와 함께 응답 던져줌.

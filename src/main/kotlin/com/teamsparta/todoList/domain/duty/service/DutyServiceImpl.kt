@@ -2,6 +2,7 @@ package com.teamsparta.todoList.domain.duty.service
 
 import com.teamsparta.todoList.domain.comment.dto.AddCommentRequestDto
 import com.teamsparta.todoList.domain.comment.dto.CommentResponseDto
+import com.teamsparta.todoList.domain.comment.dto.DeleteCommentRequestDto
 import com.teamsparta.todoList.domain.comment.dto.UpdateCommentRequestDto
 import com.teamsparta.todoList.domain.comment.model.Comment
 import com.teamsparta.todoList.domain.comment.model.toResponse
@@ -14,6 +15,8 @@ import com.teamsparta.todoList.domain.duty.model.Duty
 import com.teamsparta.todoList.domain.duty.model.toResponse
 import com.teamsparta.todoList.domain.duty.repository.DutyRepository
 import com.teamsparta.todoList.domain.exception.ModelNotFoundException
+import com.teamsparta.todoList.domain.exception.NameNotFoundException
+import com.teamsparta.todoList.domain.exception.PwNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -120,34 +123,58 @@ class DutyServiceImpl(
     @Transactional
     override fun updateComment(dutyId: Long, commentId: Long, requestDto: UpdateCommentRequestDto): CommentResponseDto {
 
-        //db에서 commentId에 해당하는 commentEntidy가져와서 수정, db저장 -> responseDTO로 반환
+        //db에서 commentId에 해당하는 commentEntity가져와서 작성자이름, 비밀번호 비교
+        // 맞으면 수정, db저장 -> responseDTO로 반환
+        // 틀리면 throw
         //만약 commentId에 해당하는 comment Entity 없다면 throw ModelNotFoundException
 
         //todo: 요기서 dutyId 받을 필요가 있나 ?
         //todo : 따로따로 부르는건 되는데(duty,comment) 그냥 comment repo에서 dutyid로 불러오는거만 안되는거 ?
 
-
-        //Todo: 작성자이름, 비밀번호받아서 일치여부 확인하기
         //1. comment 가져오고
         val comment = commentRepository.findByIdOrNull(commentId)?:throw ModelNotFoundException("Comment", commentId)
 
-        //2. 수정해주고
-        comment.content = requestDto.content
+
+        //2. 작성자이름, 비밀번호받아서 일치여부 확인하기
+        if ( comment.name == requestDto.name ) {
+            if(comment.pw ==requestDto.pw) {
+                comment.content = requestDto.content
+            }else{
+                //비밀번호 틀리면 예외
+                throw PwNotFoundException("Comment", requestDto.pw)
+            }
+        }else{
+            //작성자 이름 틀리면 예외
+            throw NameNotFoundException("Comment", requestDto.name )
+
+        }
 
         return commentRepository.save(comment).toResponse()
 
     }
 
     @Transactional
-    override fun deleteComment(dutyId: Long, commentId: Long) {
+    override fun deleteComment(dutyId: Long, commentId: Long, requestDto : DeleteCommentRequestDto) {
         //db에서 commentId에 해당하는 commentEntidy가져와서 삭제
         //만약 commentId에 해당하는 comment Entity 없다면 throw ModelNotFoundException
 
-        //Todo: 작성자이름, 비밀번호받아서 일치여부 확인하기
-        //Todo: 성공 시 성공 상태코드 반환
+
         val comment = commentRepository.findByIdOrNull(commentId)?:throw ModelNotFoundException("Comment", commentId)
 
-        commentRepository.delete(comment)
+        //2. 작성자이름, 비밀번호받아서 일치여부 확인하기
+        if ( comment.name == requestDto.name ) {
+            if(comment.pw ==requestDto.pw) {
+                commentRepository.delete(comment)
+            }else{
+                //비밀번호 틀리면 예외
+                throw PwNotFoundException("Comment", requestDto.pw)
+            }
+        }else{
+            //작성자 이름 틀리면 예외
+            throw NameNotFoundException("Comment", requestDto.name )
+
+        }
+
     }
 }
 

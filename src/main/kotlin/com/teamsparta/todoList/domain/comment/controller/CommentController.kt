@@ -2,17 +2,13 @@ package com.teamsparta.todoList.domain.comment.controller
 
 import com.teamsparta.todoList.domain.comment.dto.AddCommentRequestDto
 import com.teamsparta.todoList.domain.comment.dto.CommentResponseDto
+import com.teamsparta.todoList.domain.comment.dto.DeleteCommentRequestDto
 import com.teamsparta.todoList.domain.comment.dto.UpdateCommentRequestDto
+import com.teamsparta.todoList.domain.exception.NameNotFoundException
 import com.teamsparta.todoList.domain.duty.service.DutyService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RequestMapping("/duties/{dutyId}/comments")
@@ -42,10 +38,12 @@ class CommentController(
     }
 
     @DeleteMapping("/{commentId}")
-    fun deleteComment(@PathVariable dutyId :Long,@PathVariable commentId : Long): ResponseEntity<Unit>{
+    fun deleteComment(@PathVariable dutyId :Long,@PathVariable commentId : Long,@RequestBody requestDto : DeleteCommentRequestDto): ResponseEntity<Unit>{
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body( dutyService.deleteComment(dutyId,commentId))
+            .body( dutyService.deleteComment(dutyId,commentId,requestDto))
 
     }
+
+
 }
