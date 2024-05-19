@@ -38,9 +38,9 @@ class DutyServiceImpl(
 ): DutyService  {
 
     /**duty service*/
-    override fun getAllDutyList(): List<DutyResponseDto> {
+    override fun getAllDutyList(): MutableList<DutyResponseDto> {
         //DB에서 모든 duty(Entity)가져와서, dutyResponse(DTO)로 변환 후 반환
-       return dutyRepository.findAll().map{ it.toResponse() }//map으로 각각의 duty Entity를 List<DutyResponse>로 ~
+       return dutyRepository.findAll().map{ it.toResponse() }.toMutableList()//map으로 각각의 duty Entity를 List<DutyResponse>로 ~
     }
 
     override fun getDutyById(dutyId: Long): DutyResponseDto {
