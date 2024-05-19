@@ -13,10 +13,10 @@ import java.time.LocalDate
 class Duty (
 
         @Column(name="title",nullable=false)
-        var title : String,
+        var title : String?,
 
         @Column(name="description",nullable=false)
-        var description : String,
+        var description : String?,
 
         @Column(name="date",nullable=false)
         val date : LocalDate,
