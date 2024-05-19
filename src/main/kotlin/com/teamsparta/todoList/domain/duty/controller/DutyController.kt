@@ -23,11 +23,24 @@ class DutyController(
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     //duty관련한 각각의 command에 대한 API 작성
+
+
     @GetMapping() //할일 목록 조회
-    fun getDutyList(): ResponseEntity<List<DutyResponseDto>> {
+    fun getDutyList(@RequestParam(defaultValue = "DESC") orderType :String ): ResponseEntity<List<DutyResponseDto>> {
+
+        var dutyList : MutableList<DutyResponseDto>  =dutyService.getAllDutyList()
+        orderType.uppercase();
+
+        if(orderType == "ASC") {
+            dutyList.sortBy { it.date }
+        }else{
+            dutyList.sortByDescending { it.date }
+        }
+
+
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body( dutyService.getAllDutyList() )
+            .body(dutyList)
 
     }
 
