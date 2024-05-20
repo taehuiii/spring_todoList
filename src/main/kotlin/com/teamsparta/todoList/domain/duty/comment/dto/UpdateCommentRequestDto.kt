@@ -1,4 +1,4 @@
-package com.teamsparta.todoList.domain.comment.dto
+package com.teamsparta.todoList.domain.duty.comment.dto
 
 class UpdateCommentRequestDto(
     var content: String,

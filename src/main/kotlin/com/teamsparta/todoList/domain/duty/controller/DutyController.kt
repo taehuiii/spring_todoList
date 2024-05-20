@@ -1,9 +1,6 @@
 package com.teamsparta.todoList.domain.duty.controller
 
-import com.teamsparta.todoList.domain.duty.dto.AddDutyRequestDto
-import com.teamsparta.todoList.domain.duty.dto.CompleteDutyRequestDto
-import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
-import com.teamsparta.todoList.domain.duty.dto.UpdateDutyRequestDto
+import com.teamsparta.todoList.domain.duty.dto.*
 import com.teamsparta.todoList.domain.duty.service.DutyService
 import jakarta.validation.Valid
 import org.slf4j.Logger
@@ -45,7 +42,7 @@ class DutyController(
     }
 
     @GetMapping("/{dutyId}") //할일 단건 조회
-    fun getDuty(@PathVariable dutyId: Long): ResponseEntity<DutyResponseDto> {
+    fun getDuty(@PathVariable dutyId: Long): ResponseEntity<DutyCommentsResponseDto> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(dutyService.getDutyById(dutyId))

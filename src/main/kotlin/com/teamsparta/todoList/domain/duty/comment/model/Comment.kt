@@ -1,7 +1,7 @@
-package com.teamsparta.todoList.domain.comment.model
+package com.teamsparta.todoList.domain.duty.comment.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import com.teamsparta.todoList.domain.comment.dto.CommentResponseDto
+import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
 import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
 import com.teamsparta.todoList.domain.duty.model.Duty
 import jakarta.persistence.*
@@ -21,7 +21,6 @@ class Comment(
 
     @ManyToOne
     @JoinColumn(name = "duty_id", nullable = false)
-    @JsonBackReference
     var duty: Duty
 
 ) {

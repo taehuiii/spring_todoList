@@ -1,9 +1,10 @@
-package com.teamsparta.todoList.domain.comment.controller
+package com.teamsparta.todoList.domain.duty.comment.controller
 
-import com.teamsparta.todoList.domain.comment.dto.AddCommentRequestDto
-import com.teamsparta.todoList.domain.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.comment.dto.DeleteCommentRequestDto
-import com.teamsparta.todoList.domain.comment.dto.UpdateCommentRequestDto
+import com.teamsparta.todoList.domain.duty.comment.dto.AddCommentRequestDto
+import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
+import com.teamsparta.todoList.domain.duty.comment.dto.DeleteCommentRequestDto
+import com.teamsparta.todoList.domain.duty.comment.dto.UpdateCommentRequestDto
+import com.teamsparta.todoList.domain.duty.comment.service.CommentService
 import com.teamsparta.todoList.domain.exception.NameNotFoundException
 import com.teamsparta.todoList.domain.duty.service.DutyService
 import org.springframework.http.HttpStatus
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/duties/{dutyId}/comments")
 @RestController
 class CommentController(
-    private val dutyService: DutyService
+    private val commentService: CommentService
 
 ) {
 
@@ -26,7 +27,7 @@ class CommentController(
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(dutyService.addComment(dutyId, requestDto))
+            .body(commentService.addComment(dutyId, requestDto))
     }
 
     @PutMapping("/{commentId}")
@@ -37,7 +38,7 @@ class CommentController(
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(dutyService.updateComment(dutyId, commentId, requestDto))
+            .body(commentService.updateComment(dutyId, commentId, requestDto))
 
     }
 
@@ -49,15 +50,15 @@ class CommentController(
     ): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(dutyService.deleteComment(dutyId, commentId, requestDto))
+            .body(commentService.deleteComment(dutyId, commentId, requestDto))
 
     }
 
-//    @GetMapping()
-//    fun getCommentList(@PathVariable dutyId :Long): ResponseEntity<List<CommentResponseDto>>{
-//        return ResponseEntity
-//            .status(HttpStatus.OK)
-//            .body( dutyService.getCommentList(dutyId))
-//    }
+    @GetMapping()
+    fun getCommentList(@PathVariable dutyId :Long): ResponseEntity<List<CommentResponseDto>>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body( commentService.getCommentList(dutyId))
+    }
 
 }
