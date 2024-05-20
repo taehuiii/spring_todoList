@@ -30,21 +30,12 @@ class Duty(
     @OneToMany(mappedBy = "duty", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @Column(name = "comments", nullable = true)
     @JsonManagedReference
-    var comments: MutableList<Comment>? = mutableListOf(), //Todo: comment? commentDto? => dto에는 ?
+    var comments: MutableList<Comment>? = mutableListOf(),
 
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-
-//        fun addComment(comment: Comment) {
-//                comments.add(comment)
-//        }
-//
-//        fun removeComment(comment: Comment) {
-//                comments.remove(comment)
-//        }
-
 }
 
 fun Duty.toResponse(): DutyResponseDto {
@@ -55,6 +46,6 @@ fun Duty.toResponse(): DutyResponseDto {
         date = date,
         name = name,
         complete = complete,
-        comments = comments
+       comments = comments
     )
 }
