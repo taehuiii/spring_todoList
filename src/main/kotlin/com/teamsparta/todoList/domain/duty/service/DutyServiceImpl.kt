@@ -32,15 +32,16 @@ import org.springframework.transaction.annotation.Transactional
 class DutyServiceImpl(
     //생성자에 레포지토리 주입
     private val dutyRepository: DutyRepository,
-    private val commentRepository : CommentRepository
+    private val commentRepository: CommentRepository
 
 
-): DutyService  {
+) : DutyService {
 
     /**duty service*/
     override fun getAllDutyList(): MutableList<DutyResponseDto> {
         //DB에서 모든 duty(Entity)가져와서, dutyResponse(DTO)로 변환 후 반환
-       return dutyRepository.findAll().map{ it.toResponse() }.toMutableList()//map으로 각각의 duty Entity를 List<DutyResponse>로 ~
+        return dutyRepository.findAll().map { it.toResponse() }
+            .toMutableList()//map으로 각각의 duty Entity를 List<DutyResponse>로 ~
     }
 
     override fun getDutyById(dutyId: Long): DutyResponseDto {
@@ -48,7 +49,7 @@ class DutyServiceImpl(
         //DB에서 id에 해당하는 duty Entity가져와서 dutyResponse(DTO)로 변환 후 반환
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
 
-        duty.comments  = commentRepository.findAllByDutyId(dutyId) //entity 넣어줌
+        duty.comments = commentRepository.findAllByDutyId(dutyId) //entity 넣어줌
 
         return duty.toResponse()
     }
@@ -73,14 +74,14 @@ class DutyServiceImpl(
         //DB에서 해당하는 dutyEntity가져와서 수정 및 저장 ->결과 DutyResponse(DTO)로 반환
 
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
-        val (title, description, name )= requestDto
+        val (title, description, name) = requestDto
 
         duty.title = title
         duty.description = description
         duty.name = name
         //dirty checking
 
-        return dutyRepository.save(duty).toResponse()
+        return duty.toResponse()
     }
 
     @Transactional
@@ -94,10 +95,10 @@ class DutyServiceImpl(
     }
 
     @Transactional
-    override fun completeDuty(dutyId: Long, requestDto: CompleteDutyRequestDto) :DutyResponseDto {
+    override fun completeDuty(dutyId: Long, requestDto: CompleteDutyRequestDto): DutyResponseDto {
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
         duty.complete = !duty.complete
-        return dutyRepository.save(duty).toResponse()
+        return duty.toResponse()
     }
 
     /**comment service*/
@@ -106,10 +107,9 @@ class DutyServiceImpl(
         //만약 dutyId에 해당하는 duty Entity 없다면 throw ModelNotFoundException (선택한 할 일의 DB 저장 유무를 확인)
         //db에서 dutyId에 해당하는 duty Entity가져와서 comment Entity추가, db저장 -> responseDTO로 반환
 
-        //Todo: 댓글 작성할 때 작성자 이름과 비밀번호 함께 받기 -> 일단 필드만 두면 되나?
 
         //1.duty 가져오고
-        val duty = dutyRepository.findByIdOrNull(dutyId)?:throw ModelNotFoundException("Duty", dutyId)
+        val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
 
         //2. comment 정의
         val comment = Comment(
@@ -126,56 +126,55 @@ class DutyServiceImpl(
 
     @Transactional
     override fun updateComment(dutyId: Long, commentId: Long, requestDto: UpdateCommentRequestDto): CommentResponseDto {
+        //todo: 요기서 dutyId 받을 필요가 있나 ?
 
         //db에서 commentId에 해당하는 commentEntity가져와서 작성자이름, 비밀번호 비교
         // 맞으면 수정, db저장 -> responseDTO로 반환
         // 틀리면 throw
         //만약 commentId에 해당하는 comment Entity 없다면 throw ModelNotFoundException
 
-        //todo: 요기서 dutyId 받을 필요가 있나 ?
-        //todo : 따로따로 부르는건 되는데(duty,comment) 그냥 comment repo에서 dutyid로 불러오는거만 안되는거 ?
 
         //1. comment 가져오고
-        val comment = commentRepository.findByIdOrNull(commentId)?:throw ModelNotFoundException("Comment", commentId)
+        val comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("Comment", commentId)
 
 
         //2. 작성자이름, 비밀번호받아서 일치여부 확인하기
-        if ( comment.name == requestDto.name ) {
-            if(comment.pw ==requestDto.pw) {
+        if (comment.name == requestDto.name) {
+            if (comment.pw == requestDto.pw) {
                 comment.content = requestDto.content
-            }else{
+            } else {
                 //비밀번호 틀리면 예외
                 throw PwNotFoundException("Comment", requestDto.pw)
             }
-        }else{
+        } else {
             //작성자 이름 틀리면 예외
-            throw NameNotFoundException("Comment", requestDto.name )
+            throw NameNotFoundException("Comment", requestDto.name)
 
         }
 
-        return commentRepository.save(comment).toResponse()
+        return comment.toResponse()
 
     }
 
     @Transactional
-    override fun deleteComment(dutyId: Long, commentId: Long, requestDto : DeleteCommentRequestDto) {
+    override fun deleteComment(dutyId: Long, commentId: Long, requestDto: DeleteCommentRequestDto) {
         //db에서 commentId에 해당하는 commentEntidy가져와서 삭제
         //만약 commentId에 해당하는 comment Entity 없다면 throw ModelNotFoundException
 
 
-        val comment = commentRepository.findByIdOrNull(commentId)?:throw ModelNotFoundException("Comment", commentId)
+        val comment = commentRepository.findByIdOrNull(commentId) ?: throw ModelNotFoundException("Comment", commentId)
 
         //2. 작성자이름, 비밀번호받아서 일치여부 확인하기
-        if ( comment.name == requestDto.name ) {
-            if(comment.pw ==requestDto.pw) {
+        if (comment.name == requestDto.name) {
+            if (comment.pw == requestDto.pw) {
                 commentRepository.delete(comment)
-            }else{
+            } else {
                 //비밀번호 틀리면 예외
                 throw PwNotFoundException("Comment", requestDto.pw)
             }
-        }else{
+        } else {
             //작성자 이름 틀리면 예외
-            throw NameNotFoundException("Comment", requestDto.name )
+            throw NameNotFoundException("Comment", requestDto.name)
 
         }
 
@@ -183,9 +182,9 @@ class DutyServiceImpl(
 
 //    override fun getCommentList(dutyId: Long): MutableList<CommentResponseDto> {
 //
-//      return commentRepository.findAllByDutyId(dutyId).map { it.toResponse() } as MutableList<CommentResponseDto> //Todo : 리턴타입??
+//      return commentRepository.findAllByDutyId(dutyId).map { it.toResponse() }.toMutableList()
 //    }
-//
+
 
 }
 

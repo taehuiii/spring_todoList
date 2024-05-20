@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-    @ExceptionHandler( ModelNotFoundException :: class)
-        fun handleModelNotFoundException(e: ModelNotFoundException): ResponseEntity<ErrorResponse> {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(e.message))
+    @ExceptionHandler(ModelNotFoundException::class)
+    fun handleModelNotFoundException(e: ModelNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(e.message))
     }
 
-    @ExceptionHandler( NameNotFoundException ::class)
+    @ExceptionHandler(NameNotFoundException::class)
     fun handleNameNotFoundException(e: NameNotFoundException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(e.message))
     }
 
-    @ExceptionHandler( PwNotFoundException ::class)
+    @ExceptionHandler(PwNotFoundException::class)
     fun handlePwNotFoundException(e: PwNotFoundException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse(e.message))
     }
