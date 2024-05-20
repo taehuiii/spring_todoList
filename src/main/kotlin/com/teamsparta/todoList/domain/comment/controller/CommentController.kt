@@ -19,29 +19,37 @@ class CommentController(
 ) {
 
     @PostMapping()
-    fun addComment(@PathVariable dutyId :Long, @RequestBody requestDto : AddCommentRequestDto) :ResponseEntity<CommentResponseDto>{
+    fun addComment(
+        @PathVariable dutyId: Long,
+        @RequestBody requestDto: AddCommentRequestDto
+    ): ResponseEntity<CommentResponseDto> {
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body( dutyService.addComment(dutyId,requestDto))
+            .body(dutyService.addComment(dutyId, requestDto))
     }
 
     @PutMapping("/{commentId}")
     fun updateComment(
-        @PathVariable dutyId :Long,
-        @PathVariable commentId : Long, @RequestBody requestDto : UpdateCommentRequestDto): ResponseEntity<CommentResponseDto>{
+        @PathVariable dutyId: Long,
+        @PathVariable commentId: Long, @RequestBody requestDto: UpdateCommentRequestDto
+    ): ResponseEntity<CommentResponseDto> {
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body( dutyService.updateComment(dutyId,commentId, requestDto))
+            .body(dutyService.updateComment(dutyId, commentId, requestDto))
 
     }
 
     @DeleteMapping("/{commentId}")
-    fun deleteComment(@PathVariable dutyId :Long,@PathVariable commentId : Long,@RequestBody requestDto : DeleteCommentRequestDto): ResponseEntity<Unit>{
+    fun deleteComment(
+        @PathVariable dutyId: Long,
+        @PathVariable commentId: Long,
+        @RequestBody requestDto: DeleteCommentRequestDto
+    ): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body( dutyService.deleteComment(dutyId,commentId,requestDto))
+            .body(dutyService.deleteComment(dutyId, commentId, requestDto))
 
     }
 
