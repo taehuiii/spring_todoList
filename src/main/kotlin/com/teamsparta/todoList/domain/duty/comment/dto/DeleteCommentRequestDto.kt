@@ -1,4 +1,4 @@
-package com.teamsparta.todoList.domain.comment.dto
+package com.teamsparta.todoList.domain.duty.comment.dto
 
 data class DeleteCommentRequestDto(
     var name: String,

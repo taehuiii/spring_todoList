@@ -2,8 +2,8 @@ package com.teamsparta.todoList.domain.duty.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.teamsparta.todoList.domain.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.comment.model.Comment
+import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
+import com.teamsparta.todoList.domain.duty.comment.model.Comment
 import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
 import jakarta.persistence.*
 import java.time.LocalDate
@@ -27,10 +27,10 @@ class Duty(
     @Column(name = "complete", nullable = false)
     var complete: Boolean = false,
 
-    @OneToMany(mappedBy = "duty", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @Column(name = "comments", nullable = true)
-    @JsonManagedReference
-    var comments: MutableList<Comment>? = mutableListOf(),
+//    @OneToMany(mappedBy = "duty", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+//    @Column(name = "comments", nullable = true)
+//    @JsonManagedReference
+//    var comments: MutableList<Comment>? = mutableListOf(),
 
 ) {
     @Id
@@ -45,7 +45,8 @@ fun Duty.toResponse(): DutyResponseDto {
         description = description,
         date = date,
         name = name,
-        complete = complete,
-       comments = comments
+        complete = complete
+      // comments = comments
     )
 }
+
