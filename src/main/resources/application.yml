@@ -1,3 +1,17 @@
-spring.application :
-  name : todoList
+spring.application:
+  name: todoList
 
+spring:
+  jpa:
+    properties:
+      가:
+        format_sql: true
+        highlight_sql: true
+  logging:
+    level:
+      org:
+        hibernate:
+      SQL: debug
+      orm:
+        jdbc:
+          bind: trace
