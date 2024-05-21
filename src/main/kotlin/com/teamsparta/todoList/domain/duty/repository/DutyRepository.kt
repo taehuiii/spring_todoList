@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface DutyRepository : JpaRepository<Duty, Long> {
     fun findAllById(id: Long): List<Duty>
-    fun findByNameOrNull(name:String): List<Duty>?
+    fun findByName(name:String): List<Duty>?
 
 }

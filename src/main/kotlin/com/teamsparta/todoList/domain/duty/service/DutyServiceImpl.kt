@@ -52,7 +52,7 @@ class DutyServiceImpl(
     }
 
     override fun getDutyListByName(filterName: String): List<DutyResponseDto> {
-        val duty = dutyRepository.findByNameOrNull(filterName) ?: throw NameNotFoundException("Duty", filterName)
+        val duty = dutyRepository.findByName(filterName) ?: throw NameNotFoundException("Duty", filterName)
 
         return duty.map{it.toResponse()}
     }
