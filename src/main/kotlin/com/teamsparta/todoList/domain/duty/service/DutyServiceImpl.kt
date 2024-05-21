@@ -45,7 +45,7 @@ class DutyServiceImpl(
         //DB에서 id에 해당하는 duty Entity가져와서 dutyResponse(DTO)로 변환 후 반환
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
 
-        val commentList :MutableList<CommentResponseDto> =commentRepository.findAllByDutyId(dutyId).map { it.toResponse() }.toMutableList()
+        val commentList =commentRepository.findAllByDutyId(dutyId).map { it.toResponse() }.toMutableList()
 
         return toDutyCommentsResponseDtoResponse(commentList,duty.toResponse())
 
