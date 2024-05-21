@@ -13,6 +13,7 @@ interface DutyService {
     fun getAllDutyList(): MutableList<DutyResponseDto>
     fun getDutyById(dutyId: Long): DutyCommentsResponseDto
 
+    fun getDutyListByName(filterName : String) : List<DutyResponseDto>
     fun addDuty(requestDto: AddDutyRequestDto): DutyResponseDto
     fun updateDuty(dutyId: Long, requestDto: UpdateDutyRequestDto): DutyResponseDto
     fun deleteDuty(dutyId: Long)

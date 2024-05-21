@@ -12,5 +12,5 @@ data class DutyResponseDto(
     val date: LocalDate,
     val name: String,
     val complete: Boolean,
-  //  val comments: MutableList<Comment>? //DTO ?
+
 )  //Todo :user

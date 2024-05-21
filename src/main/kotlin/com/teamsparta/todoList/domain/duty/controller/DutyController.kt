@@ -41,6 +41,13 @@ class DutyController(
 
     }
 
+    @GetMapping("/name")
+    fun getDutyByName(@RequestParam filterName : String):ResponseEntity<List<DutyResponseDto>>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(dutyService.getDutyListByName(filterName))
+    }
+
     @GetMapping("/{dutyId}") //할일 단건 조회
     fun getDuty(@PathVariable dutyId: Long): ResponseEntity<DutyCommentsResponseDto> {
         return ResponseEntity
