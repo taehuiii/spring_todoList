@@ -51,6 +51,13 @@ class DutyServiceImpl(
 
     }
 
+    override fun getDutyListByName(filterName: String): List<DutyResponseDto> {
+        val duty = dutyRepository.findByNameOrNull(filterName) ?: throw NameNotFoundException("Duty", filterName)
+
+        return duty.map{it.toResponse()}
+    }
+
+
     @Transactional
     override fun addDuty(requestDto: AddDutyRequestDto): DutyResponseDto {
         //requestDto를 Entity변환 후 DB에 저장 ->결과 CourseResponse(DTO)로 반환
