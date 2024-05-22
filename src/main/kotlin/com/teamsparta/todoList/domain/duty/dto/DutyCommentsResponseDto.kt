@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 class DutyCommentsResponseDto(
 
-    val id: Long,
+    var id: Long,
     val title: String?,
     val description: String?,
     val date: LocalDate,
@@ -16,7 +16,7 @@ class DutyCommentsResponseDto(
 
 )
 
-fun toDutyCommentsResponseDtoResponse(
+fun toDutyCommentsResponseDtoResponse( //todo : param 순서 맞추기
     commentResponseDto: MutableList<CommentResponseDto>,
     dutyResponseDto: DutyResponseDto
 ): DutyCommentsResponseDto {
@@ -30,5 +30,28 @@ fun toDutyCommentsResponseDtoResponse(
         comments = commentResponseDto
 
     )
+}
+
+fun toDutyListCommentResponseDtoResponse(
+    dutiesRequestDto: MutableList<DutyResponseDto>,
+    commentsRequestDto: List<MutableList<CommentResponseDto>?>
+): MutableList<DutyCommentsResponseDto> {
+
+    var dutyList: MutableList<DutyCommentsResponseDto> = mutableListOf()
+
+    for (i: Int in 0 until dutiesRequestDto.size) {
+        dutyList.add( DutyCommentsResponseDto(
+            id = dutiesRequestDto[i].id!!,
+            title = dutiesRequestDto[i].title,
+            description = dutiesRequestDto[i].description,
+            date = dutiesRequestDto[i].date,
+            name = dutiesRequestDto[i].name,
+            complete = dutiesRequestDto[i].complete,
+            comments = commentsRequestDto[i]
+        ))
+
+    }
+    return dutyList
+
 }
 
