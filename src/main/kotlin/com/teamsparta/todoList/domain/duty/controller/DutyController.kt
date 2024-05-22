@@ -23,12 +23,12 @@ class DutyController(
 
 
     @GetMapping() //할일 목록 조회
-    fun getDutyList(@RequestParam(defaultValue = "DESC") orderType: String): ResponseEntity<List<DutyResponseDto>> {
+    fun getDutyList(@RequestParam(defaultValue = "DESC") orderType: String): ResponseEntity<List<DutyCommentsResponseDto>> {
 
-        var dutyList: MutableList<DutyResponseDto> = dutyService.getAllDutyList()
-        orderType.uppercase();
+        var dutyList: MutableList<DutyCommentsResponseDto> = dutyService.getAllDutyList()
+        var order= orderType.uppercase();
 
-        if (orderType == "ASC") {
+        if (order == "ASC") {
             dutyList.sortBy { it.date }
         } else {
             dutyList.sortByDescending { it.date }
