@@ -35,36 +35,34 @@ class DutyServiceImpl(
 
     /**duty service*/
     override fun getAllDutyList(): MutableList<DutyCommentsResponseDto> {
-        //DB에서 모든 duty(Entity)가져와서, dutyResponse(DTO)로 변환 후 반환
-//        return dutyRepository.findAll().map { it.toResponse() }
-//            .toMutableList()//map으로 각각의 duty Entity를 List<DutyResponse>로 ~
 
         val duty = dutyRepository.findAll().map { it.toResponse() }.toMutableList()
-        val commentList = duty.map {  commentRepository.findAllByDutyId(it.id).map { it.toResponse() }.toMutableList()}
+        val commentList = duty.map { commentRepository.findAllByDutyId(it.id).map { it.toResponse() }.toMutableList() }
 
-        return toDutyListCommentResponseDtoResponse(duty,commentList)
+        return toDutyListCommentResponseDtoResponse(duty, commentList)
 
     }
 
     override fun getDutyById(dutyId: Long): DutyCommentsResponseDto {
+
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
+        val commentList = commentRepository.findAllByDutyId(dutyId).map { it.toResponse() }.toMutableList()
 
-        val commentList =commentRepository.findAllByDutyId(dutyId).map { it.toResponse() }.toMutableList()
-
-        return toDutyCommentsResponseDtoResponse(commentList,duty.toResponse())
+        return toDutyCommentsResponseDtoResponse(commentList, duty.toResponse())
 
     }
 
     override fun getDutyListByName(filterName: String): List<DutyResponseDto> {
+
         val duty = dutyRepository.findByName(filterName) ?: throw NameNotFoundException("Duty", filterName)
 
-        return duty.map{it.toResponse()}
+        return duty.map { it.toResponse() }
     }
 
 
     @Transactional
     override fun addDuty(requestDto: AddDutyRequestDto): DutyResponseDto {
-        //requestDto를 Entity변환 후 DB에 저장 ->결과 CourseResponse(DTO)로 반환
+
         return dutyRepository.save(
             Duty(
                 title = requestDto.title,
@@ -77,8 +75,6 @@ class DutyServiceImpl(
 
     @Transactional
     override fun updateDuty(dutyId: Long, requestDto: UpdateDutyRequestDto): DutyResponseDto {
-        //만약 dutyId에 해당하는 Duty가 없다면 throw ModelNotFoundException
-        //DB에서 해당하는 dutyEntity가져와서 수정 및 저장 ->결과 DutyResponse(DTO)로 반환
 
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
         val (title, description, name) = requestDto
@@ -93,8 +89,6 @@ class DutyServiceImpl(
 
     @Transactional
     override fun deleteDuty(dutyId: Long) {
-        //만약 dutyId에 해당하는 Duty가 없다면 throw ModelNotFoundException
-        //DB에서 해당하는 Duty를 삭제, 연관된 Comment도 모두 삭제 ->  cacade
 
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
         dutyRepository.delete(duty)
@@ -103,9 +97,11 @@ class DutyServiceImpl(
 
     @Transactional
     override fun completeDuty(dutyId: Long, requestDto: CompleteDutyRequestDto): DutyResponseDto {
+
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
         duty.complete = !duty.complete
         return duty.toResponse()
+
     }
 
 

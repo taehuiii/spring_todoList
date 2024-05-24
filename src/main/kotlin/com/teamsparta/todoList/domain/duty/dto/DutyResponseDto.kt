@@ -13,4 +13,4 @@ data class DutyResponseDto(
     val name: String,
     val complete: Boolean,
 
-)  //Todo :user
+)

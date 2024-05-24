@@ -16,7 +16,7 @@ class DutyCommentsResponseDto(
 
 )
 
-fun toDutyCommentsResponseDtoResponse( //todo : param 순서 맞추기
+fun toDutyCommentsResponseDtoResponse( //todo : param 순서 duty 먼저로바꾸기
     commentResponseDto: MutableList<CommentResponseDto>,
     dutyResponseDto: DutyResponseDto
 ): DutyCommentsResponseDto {
