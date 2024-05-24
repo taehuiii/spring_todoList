@@ -12,5 +12,5 @@ interface CommentService {
     fun addComment(dutyId: Long, requestDto: AddCommentRequestDto): CommentResponseDto
     fun updateComment(dutyId: Long, commentId: Long, requestDto: UpdateCommentRequestDto): CommentResponseDto
     fun deleteComment(dutyId: Long, commentId: Long, requestDto: DeleteCommentRequestDto)
-    fun getCommentList(dutyId: Long) : MutableList<CommentResponseDto>
+    fun getCommentList(dutyId: Long): MutableList<CommentResponseDto>
 }
