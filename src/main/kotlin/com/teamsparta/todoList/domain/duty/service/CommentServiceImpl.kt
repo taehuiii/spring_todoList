@@ -1,16 +1,14 @@
-package com.teamsparta.todoList.domain.duty.comment.service
+package com.teamsparta.todoList.domain.duty.service
 
-import com.teamsparta.todoList.domain.duty.comment.dto.AddCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.duty.comment.dto.DeleteCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.dto.UpdateCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.model.Comment
-import com.teamsparta.todoList.domain.duty.comment.model.toResponse
-import com.teamsparta.todoList.domain.duty.comment.repository.CommentRepository
+import com.teamsparta.todoList.domain.duty.dto.comment.AddCommentRequestDto
+import com.teamsparta.todoList.domain.duty.dto.comment.CommentResponseDto
+import com.teamsparta.todoList.domain.duty.dto.comment.DeleteCommentRequestDto
+import com.teamsparta.todoList.domain.duty.dto.comment.UpdateCommentRequestDto
+import com.teamsparta.todoList.domain.duty.model.Comment
+import com.teamsparta.todoList.domain.duty.model.toCmtResponse
+import com.teamsparta.todoList.domain.duty.repository.CommentRepository
 import com.teamsparta.todoList.domain.duty.repository.DutyRepository
 import com.teamsparta.todoList.domain.exception.ModelNotFoundException
-import com.teamsparta.todoList.domain.exception.NameNotFoundException
-import com.teamsparta.todoList.domain.exception.PwNotFoundException
 import com.teamsparta.todoList.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
@@ -38,7 +36,7 @@ class CommentServiceImpl(
             content = requestDto.content, duty = duty, userId = currentUser.id
         )
 
-        return commentRepository.save(comment).toResponse()
+        return commentRepository.save(comment).toCmtResponse()
 
 
     }
@@ -74,7 +72,7 @@ class CommentServiceImpl(
 
         comment.content = requestDto.content
         //responseDTO로 반환
-        return comment.toResponse()
+        return comment.toCmtResponse()
 
     }
 
@@ -111,6 +109,6 @@ class CommentServiceImpl(
 
     override fun getCommentList(dutyId: Long): MutableList<CommentResponseDto> {
 
-        return commentRepository.findAllByDutyId(dutyId).map { it.toResponse() }.toMutableList()
+        return commentRepository.findAllByDutyId(dutyId).map { it.toCmtResponse() }.toMutableList()
     }
 }

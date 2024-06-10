@@ -1,8 +1,5 @@
-package com.teamsparta.todoList.domain.duty.dto
+package com.teamsparta.todoList.domain.duty.dto.duty
 
-import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.duty.comment.model.Comment
-import jakarta.persistence.Id
 import java.time.LocalDate
 
 data class DutyResponseDto(

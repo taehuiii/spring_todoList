@@ -1,16 +1,16 @@
 package com.teamsparta.todoList.domain.duty.controller
 
 import com.teamsparta.todoList.domain.duty.dto.*
+import com.teamsparta.todoList.domain.duty.dto.duty.*
 import com.teamsparta.todoList.domain.duty.service.DutyService
 import jakarta.validation.Valid
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+
 /**
  * "/duties"
  *
@@ -56,15 +56,7 @@ class DutyController(
     @PreAuthorize("hasRole('member')")
     fun getDutyList(@RequestParam(defaultValue = "DESC") orderType: String): ResponseEntity<List<DutyCommentsResponseDto>> {
 
-        var dutyList: MutableList<DutyCommentsResponseDto> = dutyService.getAllDutyList()
-        var order = orderType.uppercase();
-
-        if (order == "ASC") {
-            dutyList.sortBy { it.date }
-        } else {
-            dutyList.sortByDescending { it.date }
-        }
-
+        var dutyList: List<DutyCommentsResponseDto> = dutyService.getAllDutyList(orderType)
 
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -92,13 +84,9 @@ class DutyController(
     @PostMapping()  //duty 생성 -> RequestDTO를 Argument로 받아야함.
     @PreAuthorize("hasRole('member')")
     fun AddDuty(
-        @Valid @RequestBody addDutyRequest: AddDutyRequestDto,
-        bindingResult: BindingResult
+        @Valid @RequestBody addDutyRequest: AddDutyRequestDto
     ): ResponseEntity<DutyResponseDto> {
-        if (bindingResult.hasErrors()) {
-            logger.error("errors : ${bindingResult.fieldErrors}")
-            throw RuntimeException("errors ${bindingResult.fieldErrors}")//throw exception
-        }
+
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(dutyService.addDuty(addDutyRequest))
@@ -109,18 +97,13 @@ class DutyController(
     fun updateDuty(
         @PathVariable dutyId: Long,
         @Valid @RequestBody updateDutyRequest: UpdateDutyRequestDto,
-        bindingResult: BindingResult
     ): ResponseEntity<DutyResponseDto> {
-        if (bindingResult.hasErrors()) {
-            logger.error("errors : ${bindingResult.fieldErrors}")
-            throw RuntimeException("errors ${bindingResult.fieldErrors}")//throw exception
-        }
 
         return try {
             ResponseEntity
                 .status(HttpStatus.OK)
                 .body(dutyService.updateDuty(dutyId, updateDutyRequest))
-        }catch(e: IllegalAccessException){
+        } catch (e: IllegalAccessException) {
             ResponseEntity.status(403).build()
         }
 
@@ -134,7 +117,7 @@ class DutyController(
             ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .body(dutyService.deleteDuty(dutyId))
-        }catch( e: IllegalAccessException){
+        } catch (e: IllegalAccessException) {
             ResponseEntity
                 .status(403).build()
         }
@@ -155,4 +138,5 @@ class DutyController(
                 .status(403).build()
         }
 
-    }}
+    }
+}

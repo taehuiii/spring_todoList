@@ -1,23 +1,23 @@
 package com.teamsprta.todoList.domain.duty.service
 
-import com.teamsparta.todoList.domain.duty.comment.repository.CommentRepository
-import com.teamsparta.todoList.domain.duty.dto.AddDutyRequestDto
-import com.teamsparta.todoList.domain.duty.dto.CompleteDutyRequestDto
-import com.teamsparta.todoList.domain.duty.dto.UpdateDutyRequestDto
+import com.teamsparta.todoList.domain.duty.dto.duty.AddDutyRequestDto
+import com.teamsparta.todoList.domain.duty.dto.duty.CompleteDutyRequestDto
+import com.teamsparta.todoList.domain.duty.dto.duty.UpdateDutyRequestDto
 import com.teamsparta.todoList.domain.duty.model.Duty
+import com.teamsparta.todoList.domain.duty.repository.CommentRepository
 import com.teamsparta.todoList.domain.duty.repository.DutyRepository
 import com.teamsparta.todoList.domain.duty.service.DutyServiceImpl
 import com.teamsparta.todoList.domain.exception.ModelNotFoundException
 import com.teamsparta.todoList.infra.security.UserPrincipal
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.extensions.spring.SpringExtension
+import io.kotest.matchers.shouldBe
+import io.mockk.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import io.kotest.extensions.spring.SpringExtension
-import io.kotest.matchers.shouldBe
-import io.mockk.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -28,7 +28,7 @@ import java.time.LocalDate
 @SpringBootTest
 @AutoConfigureMockMvc //mockMvc 주입
 @ExtendWith(MockKExtension::class)
-class DutyServiceTest :BehaviorSpec( {
+class DutyServiceTest : BehaviorSpec({
     extension(SpringExtension)
 
     afterContainer {
@@ -44,15 +44,27 @@ class DutyServiceTest :BehaviorSpec( {
     Given("Duty 리스트가 존재할 때") {
         When("전체 Duty 리스트를 요청하면") {
             Then("전체 Duty 리스트가 반환되어야 한다") {
-               //given
+                //given
                 val dutyList = listOf(
-                    Duty( title = "Test Title 1", description = "Test Description 1", date = LocalDate.now(), name = "Test User 1", userId = 1L),
-                    Duty(title = "Test Title 2", description = "Test Description 2", date = LocalDate.now(), name = "Test User 2", userId = 2L)
+                    Duty(
+                        title = "Test Title 1",
+                        description = "Test Description 1",
+                        date = LocalDate.now(),
+                        name = "Test User 1",
+                        userId = 1L
+                    ),
+                    Duty(
+                        title = "Test Title 2",
+                        description = "Test Description 2",
+                        date = LocalDate.now(),
+                        name = "Test User 2",
+                        userId = 2L
+                    )
                 )
                 every { dutyRepository.findAll() } returns dutyList
 
                 //when
-                val result = dutyService.getAllDutyList()
+                val result = dutyService.getAllDutyList("desc")
 
                 //then
                 result.size shouldBe 2
@@ -67,7 +79,7 @@ class DutyServiceTest :BehaviorSpec( {
                 every { dutyRepository.findAll() } returns emptyList()
 
                 //when
-                val result = dutyService.getAllDutyList()
+                val result = dutyService.getAllDutyList("desc")
 
                 //then
                 result.size shouldBe 0
@@ -80,7 +92,13 @@ class DutyServiceTest :BehaviorSpec( {
             Then("해당 Duty가 반환되어야 한다") {
                 //given
                 val dutyId = 1L
-                val duty = Duty( title = "Test Title", description = "Test Description", date = LocalDate.now(), name = "Test User", userId = 1L).apply { id = dutyId }
+                val duty = Duty(
+                    title = "Test Title",
+                    description = "Test Description",
+                    date = LocalDate.now(),
+                    name = "Test User",
+                    userId = 1L
+                ).apply { id = dutyId }
 
                 every { dutyRepository.findByIdOrNull(dutyId) } returns duty
 
@@ -117,7 +135,13 @@ class DutyServiceTest :BehaviorSpec( {
                 //given
                 val filterName = "Test User"
                 val dutyList = listOf(
-                    Duty(title = "Test Title 1", description = "Test Description 1", date = LocalDate.now(), name = filterName, userId = 1L)
+                    Duty(
+                        title = "Test Title 1",
+                        description = "Test Description 1",
+                        date = LocalDate.now(),
+                        name = filterName,
+                        userId = 1L
+                    )
                 )
 
                 every { dutyRepository.findByName(filterName) } returns dutyList
@@ -126,9 +150,9 @@ class DutyServiceTest :BehaviorSpec( {
                 val result = dutyService.getDutyListByName(filterName)
 
                 //then
-               for(i in result){
-                   i.name shouldBe filterName
-               }
+                for (i in result) {
+                    i.name shouldBe filterName
+                }
             }
         }
     }
@@ -154,8 +178,13 @@ class DutyServiceTest :BehaviorSpec( {
         When("할 일을 추가하면") {
             Then("추가된 Duty가 반환되어야 한다") {
                 //given
-                val addDutyRequest = AddDutyRequestDto(title = "New Duty", description = "New Description", date = LocalDate.now(), name = "Test User")
-                val currentUser = UserPrincipal(1L, "test@gmail.com",setOf("member")) //인증된 사용자 객체
+                val addDutyRequest = AddDutyRequestDto(
+                    title = "New Duty",
+                    description = "New Description",
+                    date = LocalDate.now(),
+                    name = "Test User"
+                )
+                val currentUser = UserPrincipal(1L, "test@gmail.com", setOf("member")) //인증된 사용자 객체
                 // val currentUser = UserPrincipal(1L, "test@gmail.com", setOf("USER", "ADMIN")) // 여러 권한 설정가능
 
                 every { dutyRepository.save(any()) } returns Duty(
@@ -167,7 +196,8 @@ class DutyServiceTest :BehaviorSpec( {
                 ).apply { id = 1L }
 
                 val securityContext = SecurityContextImpl() //Security context 수동설정
-                securityContext.authentication = UsernamePasswordAuthenticationToken(currentUser, null, listOf()) //인증정보 설정
+                securityContext.authentication =
+                    UsernamePasswordAuthenticationToken(currentUser, null, listOf()) //인증정보 설정
                 //securityContext.authentication = UsernamePasswordAuthenticationToken(currentUser, null, currentUser.authorities)
 
                 SecurityContextHolder.setContext(securityContext)
@@ -187,9 +217,19 @@ class DutyServiceTest :BehaviorSpec( {
             Then("수정된 Duty가 반환되어야 한다") {
                 //given
                 val dutyId = 1L
-                val currentUser = UserPrincipal(1L, "test@gmail.com",setOf("member"))
-                val duty = Duty(title = "Old Title", description = "Old Description", date = LocalDate.now(), name = "Test User", userId = currentUser.id)
-                val updateDutyRequest = UpdateDutyRequestDto(title = "Updated Title", description = "Updated Description", name = "Test User")
+                val currentUser = UserPrincipal(1L, "test@gmail.com", setOf("member"))
+                val duty = Duty(
+                    title = "Old Title",
+                    description = "Old Description",
+                    date = LocalDate.now(),
+                    name = "Test User",
+                    userId = currentUser.id
+                )
+                val updateDutyRequest = UpdateDutyRequestDto(
+                    title = "Updated Title",
+                    description = "Updated Description",
+                    name = "Test User"
+                )
 
                 every { dutyRepository.findByIdOrNull(dutyId) } returns duty
                 every { dutyRepository.save(any()) } returns duty
@@ -213,9 +253,19 @@ class DutyServiceTest :BehaviorSpec( {
             Then("IllegalAccessException이 발생해야 한다") {
                 //given
                 val dutyId = 1L
-                val currentUser = UserPrincipal(2L, "test2@gmail.com",setOf("member"))
-                val duty = Duty(title = "Old Title", description = "Old Description", date = LocalDate.now(), name = "Test User", userId = 1L)
-                val updateDutyRequest = UpdateDutyRequestDto(title = "Updated Title", description = "Updated Description", name = "Test User")
+                val currentUser = UserPrincipal(2L, "test2@gmail.com", setOf("member"))
+                val duty = Duty(
+                    title = "Old Title",
+                    description = "Old Description",
+                    date = LocalDate.now(),
+                    name = "Test User",
+                    userId = 1L
+                )
+                val updateDutyRequest = UpdateDutyRequestDto(
+                    title = "Updated Title",
+                    description = "Updated Description",
+                    name = "Test User"
+                )
 
                 every { dutyRepository.findByIdOrNull(dutyId) } returns duty
 
@@ -235,8 +285,14 @@ class DutyServiceTest :BehaviorSpec( {
         When("작성자가 할 일을 삭제하면") {
             Then("해당 Duty가 삭제되어야 한다") {
                 val dutyId = 1L
-                val currentUser = UserPrincipal(1L, "test@gmail.com",setOf("member"))
-                val duty = Duty( title = "Old Title", description = "Old Description", date = LocalDate.now(), name = "Test User", userId = currentUser.id)
+                val currentUser = UserPrincipal(1L, "test@gmail.com", setOf("member"))
+                val duty = Duty(
+                    title = "Old Title",
+                    description = "Old Description",
+                    date = LocalDate.now(),
+                    name = "Test User",
+                    userId = currentUser.id
+                )
 
                 every { dutyRepository.findByIdOrNull(dutyId) } returns duty
                 every { dutyRepository.delete(duty) } just Runs
@@ -259,8 +315,14 @@ class DutyServiceTest :BehaviorSpec( {
             Then("IllegalAccessException이 발생해야 한다") {
                 //given
                 val dutyId = 1L
-                val currentUser = UserPrincipal(2L, "test2@gmail.com",setOf("member"))
-                val duty = Duty( title = "Old Title", description = "Old Description", date = LocalDate.now(), name = "Test User", userId = 1L)
+                val currentUser = UserPrincipal(2L, "test2@gmail.com", setOf("member"))
+                val duty = Duty(
+                    title = "Old Title",
+                    description = "Old Description",
+                    date = LocalDate.now(),
+                    name = "Test User",
+                    userId = 1L
+                )
 
                 every { dutyRepository.findByIdOrNull(dutyId) } returns duty
 
@@ -282,8 +344,15 @@ class DutyServiceTest :BehaviorSpec( {
             Then("완료 여부가 수정된 Duty가 반환되어야 한다") {
                 //given
                 val dutyId = 1L
-                val currentUser = UserPrincipal(1L, "test@gmail.com",setOf("member"))
-                val duty = Duty(title = "Old Title", description = "Old Description", date = LocalDate.now(), name = "Test User", userId = currentUser.id, complete = false)
+                val currentUser = UserPrincipal(1L, "test@gmail.com", setOf("member"))
+                val duty = Duty(
+                    title = "Old Title",
+                    description = "Old Description",
+                    date = LocalDate.now(),
+                    name = "Test User",
+                    userId = currentUser.id,
+                    complete = false
+                )
                 val completeDutyRequest = CompleteDutyRequestDto(complete = true)
 
                 every { dutyRepository.findByIdOrNull(dutyId) } returns duty
@@ -307,8 +376,15 @@ class DutyServiceTest :BehaviorSpec( {
             Then("IllegalAccessException이 발생해야 한다") {
                 //given
                 val dutyId = 1L
-                val currentUser = UserPrincipal(2L, "test2@gmail.com",setOf("member"))
-                val duty = Duty( title = "Old Title", description = "Old Description", date = LocalDate.now(), name = "Test User", userId = 1L, complete = false)
+                val currentUser = UserPrincipal(2L, "test2@gmail.com", setOf("member"))
+                val duty = Duty(
+                    title = "Old Title",
+                    description = "Old Description",
+                    date = LocalDate.now(),
+                    name = "Test User",
+                    userId = 1L,
+                    complete = false
+                )
                 val completeDutyRequest = CompleteDutyRequestDto(complete = true)
 
                 every { dutyRepository.findByIdOrNull(dutyId) } returns duty

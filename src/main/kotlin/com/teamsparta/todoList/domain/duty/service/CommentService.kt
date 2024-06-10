@@ -1,9 +1,9 @@
-package com.teamsparta.todoList.domain.duty.comment.service
+package com.teamsparta.todoList.domain.duty.service
 
-import com.teamsparta.todoList.domain.duty.comment.dto.AddCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.duty.comment.dto.DeleteCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.dto.UpdateCommentRequestDto
+import com.teamsparta.todoList.domain.duty.dto.comment.AddCommentRequestDto
+import com.teamsparta.todoList.domain.duty.dto.comment.CommentResponseDto
+import com.teamsparta.todoList.domain.duty.dto.comment.DeleteCommentRequestDto
+import com.teamsparta.todoList.domain.duty.dto.comment.UpdateCommentRequestDto
 
 interface CommentService {
 

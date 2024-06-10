@@ -2,9 +2,12 @@ package com.teamsparta.todoList.domain.exception
 
 import com.teamsparta.todoList.domain.exception.dto.ErrorResponse
 import com.teamsparta.todoList.domain.user.exception.InvalidCredentialException
+import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
@@ -28,6 +31,14 @@ class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentialException::class)
     fun handleInvalidCredentialException(e: InvalidCredentialException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse(e.message))
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleException(ex: MethodArgumentNotValidException): ErrorResponse {
+        log.warn("잘못된 파라미터 입력", ex)
+        val message = ex.bindingResult.fieldErrors.joinToString { "[${it.field}: ${it.defaultMessage}]" }
+        return ErrorResponse("잘못된 값이 존재합니다. $message")
     }
 }
 

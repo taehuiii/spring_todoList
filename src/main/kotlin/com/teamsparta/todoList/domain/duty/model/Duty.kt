@@ -1,11 +1,6 @@
 package com.teamsparta.todoList.domain.duty.model
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.duty.comment.model.Comment
-import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
-import com.teamsparta.todoList.domain.user.model.User
+import com.teamsparta.todoList.domain.duty.dto.duty.DutyResponseDto
 import jakarta.persistence.*
 import java.time.LocalDate
 

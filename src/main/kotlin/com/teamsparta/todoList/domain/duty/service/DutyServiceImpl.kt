@@ -1,20 +1,13 @@
 package com.teamsparta.todoList.domain.duty.service
 
-import com.teamsparta.todoList.domain.duty.comment.dto.AddCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.duty.comment.dto.DeleteCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.dto.UpdateCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.model.Comment
-import com.teamsparta.todoList.domain.duty.comment.model.toResponse
-import com.teamsparta.todoList.domain.duty.comment.repository.CommentRepository
-import com.teamsparta.todoList.domain.duty.dto.*
+import com.teamsparta.todoList.domain.duty.dto.duty.*
 import com.teamsparta.todoList.domain.duty.model.Duty
+import com.teamsparta.todoList.domain.duty.model.toCmtResponse
 import com.teamsparta.todoList.domain.duty.model.toResponse
+import com.teamsparta.todoList.domain.duty.repository.CommentRepository
 import com.teamsparta.todoList.domain.duty.repository.DutyRepository
 import com.teamsparta.todoList.domain.exception.ModelNotFoundException
 import com.teamsparta.todoList.domain.exception.NameNotFoundException
-import com.teamsparta.todoList.domain.exception.PwNotFoundException
-import com.teamsparta.todoList.domain.user.model.User
 import com.teamsparta.todoList.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
@@ -81,19 +74,26 @@ class DutyServiceImpl(
 ) : DutyService {
 
     /**duty service*/
-    override fun getAllDutyList(): MutableList<DutyCommentsResponseDto> {
+    override fun getAllDutyList(orderType: String): List<DutyCommentsResponseDto> {
 
         val duty = dutyRepository.findAll().map { it.toResponse() }.toMutableList()
-        val commentList = duty.map { commentRepository.findAllByDutyId(it.id).map { it.toResponse() }.toMutableList() }
+        val commentList =
+            duty.map { commentRepository.findAllByDutyId(it.id).map { it.toCmtResponse() }.toMutableList() }
 
-        return toDutyListCommentResponseDtoResponse(duty, commentList)
+        val orderedDutyList = toDutyListCommentResponseDtoResponse(duty, commentList)
+
+        return if (orderType.uppercase() == "ASC") {
+            orderedDutyList.sortedBy { it.date }
+        } else {
+            orderedDutyList.sortedByDescending { it.date }
+        }
 
     }
 
     override fun getDutyById(dutyId: Long): DutyCommentsResponseDto {
 
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
-        val commentList = commentRepository.findAllByDutyId(dutyId).map { it.toResponse() }.toMutableList()
+        val commentList = commentRepository.findAllByDutyId(dutyId).map { it.toCmtResponse() }.toMutableList()
 
         return toDutyCommentsResponseDtoResponse(commentList, duty.toResponse())
 
@@ -111,7 +111,7 @@ class DutyServiceImpl(
     @Transactional
     override fun addDuty(requestDto: AddDutyRequestDto): DutyResponseDto {
 
-       val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
+        val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
 
         return dutyRepository.save(
             Duty(
@@ -130,7 +130,7 @@ class DutyServiceImpl(
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
         val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
 
-        if( duty.userId != currentUser.id){
+        if (duty.userId != currentUser.id) {
             throw IllegalAccessException("You are not allowed to update this Todo")
         }
 
@@ -150,7 +150,7 @@ class DutyServiceImpl(
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
         val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
 
-        if( duty.userId != currentUser.id){
+        if (duty.userId != currentUser.id) {
             throw IllegalAccessException("You are not allowed to update this Todo")
         }
 
@@ -166,7 +166,7 @@ class DutyServiceImpl(
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
         val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
 
-        if( duty.userId != currentUser.id){
+        if (duty.userId != currentUser.id) {
             throw IllegalAccessException("You are not allowed to update this Todo")
         }
 

@@ -1,6 +1,6 @@
-package com.teamsparta.todoList.domain.duty.dto
+package com.teamsparta.todoList.domain.duty.dto.duty
 
-import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
+import com.teamsparta.todoList.domain.duty.dto.comment.CommentResponseDto
 import java.time.LocalDate
 
 
@@ -48,7 +48,8 @@ fun toDutyListCommentResponseDtoResponse(
             name = dutiesRequestDto[i].name,
             complete = dutiesRequestDto[i].complete,
             comments = commentsRequestDto[i]
-        ))
+        )
+        )
 
     }
     return dutyList

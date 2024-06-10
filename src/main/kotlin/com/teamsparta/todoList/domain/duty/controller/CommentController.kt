@@ -1,12 +1,10 @@
-package com.teamsparta.todoList.domain.duty.comment.controller
+package com.teamsparta.todoList.domain.duty.controller
 
-import com.teamsparta.todoList.domain.duty.comment.dto.AddCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.duty.comment.dto.DeleteCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.dto.UpdateCommentRequestDto
-import com.teamsparta.todoList.domain.duty.comment.service.CommentService
-import com.teamsparta.todoList.domain.exception.NameNotFoundException
-import com.teamsparta.todoList.domain.duty.service.DutyService
+import com.teamsparta.todoList.domain.duty.dto.comment.AddCommentRequestDto
+import com.teamsparta.todoList.domain.duty.dto.comment.CommentResponseDto
+import com.teamsparta.todoList.domain.duty.dto.comment.DeleteCommentRequestDto
+import com.teamsparta.todoList.domain.duty.dto.comment.UpdateCommentRequestDto
+import com.teamsparta.todoList.domain.duty.service.CommentService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

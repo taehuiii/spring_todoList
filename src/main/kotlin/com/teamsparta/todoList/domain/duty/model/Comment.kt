@@ -1,9 +1,6 @@
-package com.teamsparta.todoList.domain.duty.comment.model
+package com.teamsparta.todoList.domain.duty.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
-import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
-import com.teamsparta.todoList.domain.duty.model.Duty
+import com.teamsparta.todoList.domain.duty.dto.comment.CommentResponseDto
 import jakarta.persistence.*
 
 @Entity
@@ -33,7 +30,7 @@ class Comment(
     var id: Long? = null
 }
 
-fun Comment.toResponse(): CommentResponseDto {
+fun Comment.toCmtResponse(): CommentResponseDto {
     return CommentResponseDto(
         id = id!!,
         content = content,
