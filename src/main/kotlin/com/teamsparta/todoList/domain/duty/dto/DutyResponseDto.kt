@@ -2,6 +2,7 @@ package com.teamsparta.todoList.domain.duty.dto
 
 import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
 import com.teamsparta.todoList.domain.duty.comment.model.Comment
+import jakarta.persistence.Id
 import java.time.LocalDate
 
 data class DutyResponseDto(
@@ -12,5 +13,6 @@ data class DutyResponseDto(
     val date: LocalDate,
     val name: String,
     val complete: Boolean,
+    val userId: Long
 
 )

@@ -14,9 +14,56 @@ import com.teamsparta.todoList.domain.duty.repository.DutyRepository
 import com.teamsparta.todoList.domain.exception.ModelNotFoundException
 import com.teamsparta.todoList.domain.exception.NameNotFoundException
 import com.teamsparta.todoList.domain.exception.PwNotFoundException
+import com.teamsparta.todoList.domain.user.model.User
+import com.teamsparta.todoList.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
+/**
+ * getAllDUtyList
+ * DutyList가
+ * 1-1. 존재할때
+ * 1-2. 존재하지 않을때
+ *-> 전체 list를 요청하면?
+ *
+ * getDutyById
+ * dutyId에 해당하는 duty가
+ * 1-1. 존재할때
+ * 1-2. 존재하지 않을 때
+ *-> 특정 duty를 요청하면?
+ *
+ *
+ * getDutyListByName
+ * 작성자이름에 해당하는 duty가
+ * 1-1. 존재할때
+ * 1-2. 존재하지 않을 때
+ *-> 작성자이름으로 조회를 요청하면?
+ *
+ *
+ *addDuty
+ * 할일 데이터가 있을 때
+ * 사용자가 할일을 추가하면, 추가한다
+ *
+ * updateDuty
+ * 1. 게시글 작성자가
+ * 2. 게시글 작성자가 아닌 사람이
+ * 할일을 수정하면 ,
+ *
+ * deleteDuty
+ * 1. 게시글 작성자가
+ * 2. 게시글 작성자가 아닌 사람이
+ * 할일을 삭제하면
+ *
+ *
+ * completeDuty
+ * 1. 게시글 작성자가
+ * 2. 게시글 작성자가 아닌 사람이
+ * 할일 완료여부를 수정하면
+ *
+ *
+ */
 
 
 /** service layer 요구사항
@@ -56,6 +103,7 @@ class DutyServiceImpl(
 
         val duty = dutyRepository.findByName(filterName) ?: throw NameNotFoundException("Duty", filterName)
 
+
         return duty.map { it.toResponse() }
     }
 
@@ -63,12 +111,15 @@ class DutyServiceImpl(
     @Transactional
     override fun addDuty(requestDto: AddDutyRequestDto): DutyResponseDto {
 
+       val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
+
         return dutyRepository.save(
             Duty(
                 title = requestDto.title,
                 description = requestDto.description,
                 date = requestDto.date,
                 name = requestDto.name,
+                userId = currentUser.id
             )
         ).toResponse()
     }
@@ -77,6 +128,12 @@ class DutyServiceImpl(
     override fun updateDuty(dutyId: Long, requestDto: UpdateDutyRequestDto): DutyResponseDto {
 
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
+        val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
+
+        if( duty.userId != currentUser.id){
+            throw IllegalAccessException("You are not allowed to update this Todo")
+        }
+
         val (title, description, name) = requestDto
 
         duty.title = title
@@ -91,6 +148,14 @@ class DutyServiceImpl(
     override fun deleteDuty(dutyId: Long) {
 
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
+        val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
+
+        if( duty.userId != currentUser.id){
+            throw IllegalAccessException("You are not allowed to update this Todo")
+        }
+
+
+
         dutyRepository.delete(duty)
 
     }
@@ -99,6 +164,12 @@ class DutyServiceImpl(
     override fun completeDuty(dutyId: Long, requestDto: CompleteDutyRequestDto): DutyResponseDto {
 
         val duty = dutyRepository.findByIdOrNull(dutyId) ?: throw ModelNotFoundException("Duty", dutyId)
+        val currentUser = SecurityContextHolder.getContext().authentication.principal as UserPrincipal
+
+        if( duty.userId != currentUser.id){
+            throw IllegalAccessException("You are not allowed to update this Todo")
+        }
+
         duty.complete = !duty.complete
         return duty.toResponse()
 

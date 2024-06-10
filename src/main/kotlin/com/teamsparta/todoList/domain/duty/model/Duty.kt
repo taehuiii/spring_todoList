@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.teamsparta.todoList.domain.duty.comment.dto.CommentResponseDto
 import com.teamsparta.todoList.domain.duty.comment.model.Comment
 import com.teamsparta.todoList.domain.duty.dto.DutyResponseDto
+import com.teamsparta.todoList.domain.user.model.User
 import jakarta.persistence.*
 import java.time.LocalDate
 
@@ -27,6 +28,12 @@ class Duty(
     @Column(name = "complete", nullable = false)
     var complete: Boolean = false,
 
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", nullable = false)
+//    var user: User
+
+    @Column(name="user_id", nullable=false)
+    var userId : Long
 
     ) {
     @Id
@@ -41,7 +48,8 @@ fun Duty.toResponse(): DutyResponseDto {
         description = description,
         date = date,
         name = name,
-        complete = complete
+        complete = complete,
+        userId = userId
     )
 }
 

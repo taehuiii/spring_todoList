@@ -13,15 +13,18 @@ class Comment(
     @Column(name = "content", nullable = false)
     var content: String,
 
-    @Column(name = "name", nullable = false)
-    var name: String,
-
-    @Column(name = "pw", nullable = false)
-    var pw: String,
+//    @Column(name = "name", nullable = false)
+//    var name: String,
+//
+//    @Column(name = "pw", nullable = false)
+//    var pw: String,
 
     @ManyToOne
     @JoinColumn(name = "duty_id", nullable = false)
-    var duty: Duty
+    var duty: Duty,
+
+    @Column(name="user_id", nullable=false)
+    val userId:Long
 
 ) {
 
@@ -34,6 +37,9 @@ fun Comment.toResponse(): CommentResponseDto {
     return CommentResponseDto(
         id = id!!,
         content = content,
-        name = name,
+     //   name = name,
+    userId = userId,
+
+
     )
 }
